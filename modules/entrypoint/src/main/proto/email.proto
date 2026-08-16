@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.didi.email.client";
+
+package br.com.didi.email;
+
+service EmailService {
+  rpc sendEmail(SendEmailRequest) returns (SendEmailResponse);
+}
+
+message SendEmailRequest {
+  string from = 1;
+  repeated string to = 2;
+  repeated string cc = 3;
+  repeated string bcc = 4;
+  string subject = 5;
+  string template_id = 6;
+  string tenant_id = 7;
+  map<string, string> variables = 8;
+}
+
+message SendEmailResponse {
+  bool success = 1;
+  optional ErrorDetails errorDetails = 2;
+}
+
+message ErrorDetails {
+  repeated string blocked_emails = 2;
+  repeated string invalid_syntax_emails = 3;
+  bool api_key_is_valid = 4;
+  bool template_exists = 5;
+  bool template_matches_variables = 6;
+}

@@ -1,0 +1,103 @@
+services:
+
+  entrypoint:
+    container_name: entrypoint
+    build:
+      context: ../
+      dockerfile: modules/entrypoint/Dockerfile
+    ports:
+      - "9090:9090"
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  sender:
+    container_name: sender
+    build:
+      context: ../
+      dockerfile: modules/sender/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  webhook:
+    container_name: webhook
+    build:
+      context: ../
+      dockerfile: modules/webhook/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  analytics-events:
+    container_name: analytics-events
+    build:
+      context: ../
+      dockerfile: modules/analytics-events/Dockerfile
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  analytics-presenter:
+    container_name: analytics-presenter
+    build:
+      context: ../
+      dockerfile: modules/analytics-presenter/Dockerfile
+    ports:
+      - "9091:9091"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: email
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U didi_user -d email_db" ]
+      interval: 5s
+      timeout: 5s
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./rabbitmq.json:/etc/rabbitmq/definitions.json:ro
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  sendgrid:
+    image: ghashange/sendgrid-mock:1.13.0
+    container_name: sendgrid
+    ports:
+      - "3000:3000"
+    environment:
+      - API_KEY=SG.mock_key
+      - EVENT_DELIVERY_URL=http://host.docker.internal:8080/emails/webhook
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

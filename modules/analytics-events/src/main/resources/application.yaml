@@ -1,0 +1,25 @@
+spring:
+
+  application:
+    name: email-processor-analytics-events
+
+  datasource:
+    url: jdbc:postgresql://host.docker.internal:5432/email
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 20000
+
+  rabbitmq:
+    host: host.docker.internal
+    port: 5672
+    username: guest
+    password: guest
+
+queue:
+  name: email.analytics.queue
+  concurrency: 1-3

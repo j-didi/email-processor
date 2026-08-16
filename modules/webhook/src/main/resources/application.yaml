@@ -1,0 +1,12 @@
+spring:
+
+  application:
+    name: email-processor-webhook
+
+  rabbitmq:
+    host: host.docker.internal
+    port: 5672
+    username: guest
+    password: guest
+
+queue.name: email.analytics.queue

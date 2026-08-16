@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.didi.email.analytics.client";
+
+package br.com.didi.email;
+
+service EmailAnalyticsService {
+  rpc getDailyStatsReport(AnalyticsReportRequest) returns (AnalyticsReportResponse);
+}
+
+message AnalyticsReportRequest {
+  string start_date = 1;
+  string end_date = 2;
+  string tenant_id = 3;
+  optional string subject = 4;
+}
+
+message DailyStatsDetail {
+  string stats_date = 1;
+  string subject = 2;
+  int32 total_processed = 3;
+  int32 total_delivered = 4;
+  int32 total_opened = 5;
+  int32 total_bounce = 6;
+  int32 total_dropped = 7;
+}
+
+message AnalyticsReportResponse {
+  string tenant_id = 1;
+
+  int32 period_total_processed = 2;
+  int32 period_total_delivered = 3;
+  int32 period_total_opened = 4;
+  int32 period_total_bounce = 5;
+  int32 period_total_dropped = 6;
+
+  repeated DailyStatsDetail details = 7;
+}

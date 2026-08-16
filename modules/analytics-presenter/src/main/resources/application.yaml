@@ -1,0 +1,20 @@
+spring:
+
+  application:
+    name: email-processor-analytics-presenter
+
+  grpc:
+    server:
+      port: 9091
+
+  datasource:
+    url: jdbc:postgresql://host.docker.internal:5432/email
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 20000
+

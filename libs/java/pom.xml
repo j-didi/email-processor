@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>br.com.didi</groupId>
+    <artifactId>email-processor-proto</artifactId> <!-- Ajustado o nome do artefato para não conflitar com o projeto principal -->
+    <version>${revision}</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <revision>1.0.0-SNAPSHOT</revision>
+    </properties>
+
+    <dependencies>
+        <!-- Core do ServiceTalk para comunicação gRPC -->
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-grpc-netty</artifactId>
+            <version>0.42.43</version>
+        </dependency>
+
+        <!-- MÓDULO QUE ESTAVA FALTANDO: Fornece o pacote io.servicetalk.data.protobuf -->
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-data-protobuf</artifactId>
+            <version>0.42.43</version>
+        </dependency>
+
+        <!-- Suporte do ServiceTalk aos tipos de dados do Protobuf -->
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-grpc-protobuf</artifactId>
+            <version>0.42.43</version>
+        </dependency>
+
+        <!-- VERSÃO CORRIGIDA: Atualizada para casar com o plugin v35.1 (v4.x do Protobuf) -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.25.3</version>
+        </dependency>
+
+    </dependencies>
+
+
+
+    <build>
+
+        <sourceDirectory>.</sourceDirectory>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <!-- CORREÇÃO: Como a raiz é '.', incluímos diretamente todos os arquivos java recursivamente -->
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
