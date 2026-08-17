@@ -24,12 +24,12 @@
         <developer/>
     </developers>
     <modules>
-        <module>entrypoint</module>
-        <module>sender</module>
-        <module>shared</module>
-        <module>webhook</module>
-        <module>analytics-events</module>
-        <module>analytics-presenter</module>
+        <module>modules/entrypoint</module>
+        <module>modules/sender</module>
+        <module>modules/shared</module>
+        <module>modules/webhook</module>
+        <module>modules/analytics-events</module>
+        <module>modules/analytics-presenter</module>
     </modules>
     <scm>
         <connection/>
